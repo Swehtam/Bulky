@@ -11,7 +11,7 @@ namespace Bulky.DataAccess.Repository
         public UnitOfWork(ApplicationDbContext context) {
             _context = context;
             Category = new CategoryRepository(_context);
-            //Product = new ProductRepository(_context);
+            Product = new ProductRepository(_context);
         }
 
         public void Save()

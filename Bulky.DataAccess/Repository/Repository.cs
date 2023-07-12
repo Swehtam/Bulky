@@ -1,34 +1,51 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Bulky.DataAccess.Data;
 using Bulky.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Bulky.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        //private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _db;
         internal DbSet<T> _dbSet;
 
         public Repository(ApplicationDbContext db)
         {
-            //_db = db;
-            _dbSet = db.Set<T>();
+            _db = db;
+            _dbSet = _db.Set<T>();
             //_db.Category == _dbSet
+            _db.Products.Include(u => u.Category);
         }
 
         public void Add(T entity) => _dbSet.Add(entity);
 
-        public T Get(Expression<Func<T, bool>> filter)
+        public T Get(Expression<Func<T, bool>> filter, string? includedProperties = null)
         {
             IQueryable<T> query = _dbSet;
             query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includedProperties))
+            {
+                foreach (var includePro in includedProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includePro);
+                }
+            }
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includedProperties = null)
         {
             IQueryable<T> query = _dbSet;
+            if (!string.IsNullOrEmpty(includedProperties))
+            {
+                foreach(var includePro in includedProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includePro);
+                }
+            }
             return query.ToList();
         }
 

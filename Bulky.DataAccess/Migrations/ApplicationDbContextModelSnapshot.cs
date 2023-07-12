@@ -74,11 +74,18 @@ namespace Bulky.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ISBN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -100,7 +107,64 @@ namespace Bulky.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Author = "J. M. Barrie",
+                            CategoryId = 1,
+                            Description = "Boy who didn't want to be an adult",
+                            ISBN = "123",
+                            ImageUrl = "",
+                            ListPrice = 50.0,
+                            Price = 49.0,
+                            Price100 = 47.0,
+                            Price50 = 48.0,
+                            Title = "Peter Pan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Author = "Herman Melville",
+                            CategoryId = 2,
+                            Description = "Whale named Moby Dick who swallowed two people",
+                            ISBN = "456",
+                            ImageUrl = "",
+                            ListPrice = 25.5,
+                            Price = 24.5,
+                            Price100 = 22.5,
+                            Price50 = 23.5,
+                            Title = "Moby Dick"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Author = "Carlo Collodi",
+                            CategoryId = 3,
+                            Description = "Wood boy who wants to be a real boy",
+                            ISBN = "789",
+                            ImageUrl = "",
+                            ListPrice = 9.9900000000000002,
+                            Price = 8.9900000000000002,
+                            Price100 = 6.9900000000000002,
+                            Price50 = 7.9900000000000002,
+                            Title = "Pinochio"
+                        });
+                });
+
+            modelBuilder.Entity("Bulky.Models.Product", b =>
+                {
+                    b.HasOne("Bulky.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
