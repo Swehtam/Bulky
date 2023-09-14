@@ -8,5 +8,7 @@ namespace Bulky.DataAccess.Repository.IRepository
 
         void UpdateStatus(int id, string orderStatus, string? paymentStatus = null);
 		void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId);
+
+        void UpdateShippingStatus(int id, string carrier, string trackingNumber);
 	}
 }
