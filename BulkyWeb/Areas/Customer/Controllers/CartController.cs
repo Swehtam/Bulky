@@ -8,6 +8,8 @@ using System.Security.Claims;
 using Bulky.Utility;
 using System.Reflection;
 using Stripe.Checkout;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text.Encodings.Web;
 
 namespace BulkyWeb.Areas.Customer.Controllers
 {
@@ -16,12 +18,14 @@ namespace BulkyWeb.Areas.Customer.Controllers
 	public class CartController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IEmailSender _emailSender;
 		[BindProperty]
 		public ShoppingCartVM ShoppingCartVM { get; set; }
 
-		public CartController(IUnitOfWork unitOfWork)
+		public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
 		{
 			_unitOfWork = unitOfWork;
+			_emailSender = emailSender;
 		}
 
 		public IActionResult Index()
@@ -227,9 +231,13 @@ namespace BulkyWeb.Areas.Customer.Controllers
 				.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
 
 			_unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
-			_unitOfWork.Save();
-			HttpContext.Session.Clear();
-			return View(id);
+            _unitOfWork.Save();
+            HttpContext.Session.Clear();
+
+            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Bulky Web",
+                        $"<p>New Order created  - {orderHeader.Id} </p>");
+
+            return View(id);
 		}
 
 		private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
