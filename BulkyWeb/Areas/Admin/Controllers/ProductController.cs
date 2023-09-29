@@ -63,9 +63,9 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if (file!= null)
                 {
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 

@@ -8,6 +8,8 @@ using Bulky.Utility;
 using Stripe;
 using System.ServiceProcess;
 using Bulky.DataAccess.DbInitializer;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+	options.DefaultRequestCulture = new RequestCulture("pt-BR", "pt-BR");
+	options.SupportedCultures = new List<CultureInfo> { new CultureInfo("pt-BR") };
+	options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("pt-BR") };
+});
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.ConfigureApplicationCookie(option =>
