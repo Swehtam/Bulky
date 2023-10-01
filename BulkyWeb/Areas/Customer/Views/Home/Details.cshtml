@@ -1,4 +1,5 @@
-﻿@model ShoppingCart
+﻿@using System.Globalization
+@model ShoppingCart
 
 <form method="post">
     <input asp-for="ProductId" hidden />
@@ -36,7 +37,7 @@
                             <h6 class="text-dark text-opacity-50  pb-2">
                                 List Price:
                                 <span class="text-decoration-line-through">
-                                    @Model.Product.ListPrice.ToString("c")
+                                    @Model.Product.ListPrice.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR"))
                                 </span>
                             </h6>
                         </div>

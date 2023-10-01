@@ -21,9 +21,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
+	var ptBr = new List<CultureInfo> { new CultureInfo("pt-BR") };
 	options.DefaultRequestCulture = new RequestCulture("pt-BR", "pt-BR");
-	options.SupportedCultures = new List<CultureInfo> { new CultureInfo("pt-BR") };
-	options.SupportedUICultures = new List<CultureInfo> { new CultureInfo("pt-BR") };
+	options.SupportedCultures = ptBr;
+	options.SupportedUICultures = ptBr;
 });
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();

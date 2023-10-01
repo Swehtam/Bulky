@@ -28,7 +28,7 @@ namespace Bulky.DataAccess.Repository
                 obj.Price50 = product.Price50;
                 obj.Price100 = product.Price100;
                 obj.CategoryId = product.CategoryId;
-                if(obj.ImageUrl != null)
+                if(product.ImageUrl != null)
                 {
                     obj.ImageUrl = product.ImageUrl;
                 }

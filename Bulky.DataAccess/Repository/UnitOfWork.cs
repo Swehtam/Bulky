@@ -26,7 +26,7 @@ namespace Bulky.DataAccess.Repository
 
         public void Save()
         {
-            _context.SaveChanges();
+            _context.SaveChangesAsync().GetAwaiter().GetResult();
         }
     }
 }
