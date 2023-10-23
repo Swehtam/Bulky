@@ -18,7 +18,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+builder.Services.Configure<StripeSettings>(config =>
+{
+	config.PublishableKey = builder.Configuration.GetSection("Stripe:PublishableKey").Get<string>();
+	config.SecretKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
+});
+
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
 	var ptBr = new List<CultureInfo> { new CultureInfo("pt-BR") };
