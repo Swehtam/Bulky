@@ -3,6 +3,7 @@ using Bulky.Models;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,14 @@ namespace Bulky.DataAccess.DbInitializer
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
+        private readonly IConfiguration _config;
 
-        public DbInitializer(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext db)
+        public DbInitializer(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext db, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _db = db;
+            _config = configuration;
         }
 
         public void Initialize() 
@@ -55,7 +58,7 @@ namespace Bulky.DataAccess.DbInitializer
                     State = "PB",
                     PostalCode = "45612789",
                     City = "A minha"
-                }, "Admin123!").GetAwaiter().GetResult();
+                }, _config.GetSection("Admin:Password").Get<string>()).GetAwaiter().GetResult();
 
                 ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u => u.Email == "testadmin@gmail.com");
                 _userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
