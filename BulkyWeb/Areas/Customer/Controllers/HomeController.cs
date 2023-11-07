@@ -23,7 +23,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-			IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includedProperties:"Category");
+			IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includedProperties:"Category,ProductImages");
             return View(productList);
         }
 
@@ -31,7 +31,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
         {
             ShoppingCart cart = new()
             {
-                Product = _unitOfWork.Product.Get(u => u.Id == productId, includedProperties: "Category"),
+                Product = _unitOfWork.Product.Get(u => u.Id == productId, includedProperties: "Category,ProductImages"),
                 Count = 1,
                 ProductId = productId
             };

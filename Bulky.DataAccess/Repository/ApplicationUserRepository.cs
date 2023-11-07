@@ -12,5 +12,23 @@ namespace Bulky.DataAccess.Repository
         {
             _db = db;
         }
+
+        public void LockUser(string userID)
+        {
+            var userObj = _db.ApplicationUsers.FirstOrDefault(p => p.Id == userID);
+            userObj.LockoutEnd = DateTime.Now.AddYears(1000);
+        }
+
+        public void UnlockUser(string userID)
+        {
+            var userObj = _db.ApplicationUsers.FirstOrDefault(p => p.Id == userID);
+            userObj.LockoutEnd = DateTime.Now;
+        }
+
+        public void UpdateCompany(string userID, int? companyID)
+        {
+            var userObj = _db.ApplicationUsers.FirstOrDefault(p => p.Id == userID);
+            userObj.CompanyId = companyID;
+        }
     }
 }

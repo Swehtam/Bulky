@@ -10,6 +10,7 @@ using System.Reflection;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Text.Encodings.Web;
+using System.Collections;
 
 namespace BulkyWeb.Areas.Customer.Controllers
 {
@@ -35,16 +36,19 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
 			ShoppingCartVM = new()
 			{
-				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => (u.ApplicationUserId == userId), includedProperties: "Product"),
+				ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => (u.ApplicationUserId == userId), 
+					includedProperties: "Product"),
 				OrderHeader = new()
 			};
 
+			IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
+
 			foreach (ShoppingCart cart in ShoppingCartVM.ShoppingCartList)
 			{
+				cart.Product.ProductImages = productImages.Where(u => u.ProductId == cart.ProductId).ToList();
 				cart.Price = GetPriceBasedOnQuantity(cart);
 				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
 			}
-
 
 			return View(ShoppingCartVM);
 		}
